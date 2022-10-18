@@ -1,7 +1,9 @@
 import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/screens/contact_form.dart';
+import 'package:bytebank/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
 
+import '../components/progress.dart';
 import '../models/contact.dart';
 
 class ContactsList extends StatefulWidget {
@@ -18,7 +20,7 @@ class _ContactsListState extends State<ContactsList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contacts'),
+        title: const Text('Transfer'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List.empty(),
@@ -28,17 +30,7 @@ class _ContactsListState extends State<ContactsList> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const <Widget>[
-                    CircularProgressIndicator(),
-                    Text('Loading')
-                  ],
-                ),
-              );
-              break;
+              return const Progress();
             case ConnectionState.active:
               break;
             case ConnectionState.done:
@@ -47,14 +39,19 @@ class _ContactsListState extends State<ContactsList> {
                 itemBuilder: (context, index) {
                   if (contacts != null) {
                     final Contact contact = contacts[index];
-                    return _ContactItem(contact: contact);
+                    return _ContactItem(
+                      contact: contact,
+                      onClick: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => TransactionForm(contact)));
+                      },
+                    );
                   } else {
                     return const Text('Unknown error');
                   }
                 },
                 itemCount: contacts != null ? contacts.length : 0,
               );
-              break;
           }
           return const Text('Unknown error');
         },
@@ -63,7 +60,7 @@ class _ContactsListState extends State<ContactsList> {
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(
-            builder: (context) => ContactForm(),
+            builder: (context) => const ContactForm(),
           ))
               .then((value) {
             setState(() {});
@@ -81,14 +78,17 @@ class _ContactItem extends StatelessWidget {
   const _ContactItem({
     Key? key,
     required this.contact,
+    required this.onClick,
   }) : super(key: key);
 
   final Contact contact;
+  final Function onClick;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onClick(),
         title: Text(
           contact.name,
           style: const TextStyle(

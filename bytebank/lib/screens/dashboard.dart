@@ -66,10 +66,7 @@ void _showTransactionsList(BuildContext context) {
 
 class _FeatureItem extends StatelessWidget {
   const _FeatureItem(
-      {super.key,
-      required this.name,
-      required this.icon,
-      required this.onClick});
+      {required this.name, required this.icon, required this.onClick});
 
   final String name;
   final IconData icon;

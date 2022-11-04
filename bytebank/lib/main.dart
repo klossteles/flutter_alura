@@ -1,4 +1,3 @@
-import 'package:bytebank/http/webclient.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';

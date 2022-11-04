@@ -15,7 +15,7 @@ class TransactionWebClient {
         .toList();
   }
 
-  Future<Transaction?> save(Transaction transaction) async {
+  Future<Transaction?> save(Transaction transaction, String password) async {
     Map<String, dynamic> transactionMap = transaction.toJson();
     final String transactionJson = jsonEncode(transactionMap);
 
